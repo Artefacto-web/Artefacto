@@ -5,6 +5,22 @@ class EditionsLoader {
     this.loadingElement = document.getElementById("loading-editions")
     this.gridElement = document.getElementById("editions-grid")
     this.noEditionsElement = document.getElementById("no-editions")
+
+    // PDF.js configuration
+    window.pdfjsLib = window["pdfjs-dist/build/pdf"]
+    if (typeof window.pdfjsLib !== "undefined") {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
+    }
+
+    // PDF viewer variables
+    this.pdfDoc = null
+    this.pageNum = 1
+    this.pageRendering = false
+    this.pageNumPending = null
+    this.scale = 1.2
+    this.canvas = null
+    this.ctx = null
   }
 
   async loadEditions() {
@@ -12,8 +28,7 @@ class EditionsLoader {
       // Simulate loading time
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      // For now, we'll use the predefined editions from script.js
-      // In a real implementation, you would scan the magazines/ directory
+      // Define editions directly here to avoid dependency issues
       this.editions = [
         {
           title: "Junio 2025 - Vol. 1, Nº 1",
@@ -35,29 +50,36 @@ class EditionsLoader {
   }
 
   displayEditions() {
-    this.loadingElement.style.display = "none"
+    if (this.loadingElement) {
+      this.loadingElement.style.display = "none"
+    }
 
     if (this.editions.length === 0) {
       this.showNoEditions()
       return
     }
 
-    this.gridElement.style.display = "grid"
-    this.gridElement.innerHTML = ""
+    if (this.gridElement) {
+      this.gridElement.style.display = "grid"
+      this.gridElement.innerHTML = ""
 
-    // Sort editions by date (newest first)
-    const sortedEditions = this.editions.sort((a, b) => new Date(b.date) - new Date(a.date))
+      // Sort editions by date (newest first)
+      const sortedEditions = this.editions.sort((a, b) => new Date(b.date) - new Date(a.date))
 
-    sortedEditions.forEach((edition, index) => {
-      const editionCard = this.createEditionCard(edition, index === 0)
-      this.gridElement.appendChild(editionCard)
-    })
+      sortedEditions.forEach((edition, index) => {
+        const editionCard = this.createEditionCard(edition, index === 0)
+        this.gridElement.appendChild(editionCard)
+      })
+    }
   }
 
   createEditionCard(edition, isLatest = false) {
     const card = document.createElement("div")
     card.className = "edition-card"
     if (isLatest) card.classList.add("latest-edition")
+
+    // Create unique function names to avoid conflicts
+    const viewFunctionName = `viewEdition_${edition.volume}_${edition.number}`
 
     card.innerHTML = `
       <div class="edition-cover">
@@ -72,7 +94,7 @@ class EditionsLoader {
           <span class="edition-volume">Vol. ${edition.volume}, Nº ${edition.number}</span>
         </div>
         <div class="edition-actions">
-          <button class="btn-primary btn-small" onclick="openPDFFromEditions('${edition.filename}', '${edition.title}')">
+          <button class="btn-primary btn-small" onclick="editionsLoader.openPDF('${edition.filename}', '${edition.title}')">
             👁️ Ver Revista
           </button>
           <a href="${edition.filename}" class="btn-secondary btn-small" download>
@@ -97,186 +119,246 @@ class EditionsLoader {
   }
 
   showNoEditions() {
-    this.loadingElement.style.display = "none"
-    this.noEditionsElement.style.display = "block"
+    if (this.loadingElement) {
+      this.loadingElement.style.display = "none"
+    }
+    if (this.noEditionsElement) {
+      this.noEditionsElement.style.display = "block"
+    }
+  }
+
+  // PDF Functions
+  openPDF(filename, title) {
+    const modal = document.getElementById("pdf-modal")
+    const titleElement = document.getElementById("pdf-title")
+
+    if (titleElement) {
+      titleElement.textContent = `Artefacto - ${title}`
+    }
+    if (modal) {
+      modal.style.display = "block"
+    }
+
+    // Initialize canvas if not already done
+    if (!this.canvas) {
+      this.canvas = document.getElementById("pdf-canvas")
+      if (this.canvas) {
+        this.ctx = this.canvas.getContext("2d")
+      }
+    }
+
+    this.loadPDF(filename)
+  }
+
+  loadPDF(url) {
+    const loadingMessage = document.getElementById("pdf-loading-message")
+    if (loadingMessage) {
+      loadingMessage.style.display = "block"
+    }
+
+    if (typeof window.pdfjsLib === "undefined") {
+      console.error("PDF.js not loaded")
+      if (loadingMessage) {
+        loadingMessage.style.display = "none"
+      }
+      alert("Error: PDF.js no está cargado correctamente.")
+      return
+    }
+
+    window.pdfjsLib
+      .getDocument(url)
+      .promise.then((pdfDoc_) => {
+        this.pdfDoc = pdfDoc_
+        this.pageNum = 1 // Reset to first page
+
+        const pageInfo = document.getElementById("page-info")
+        if (pageInfo) {
+          pageInfo.textContent = `Página ${this.pageNum} de ${this.pdfDoc.numPages}`
+        }
+
+        // Hide loading message
+        if (loadingMessage) {
+          loadingMessage.style.display = "none"
+        }
+
+        // Initial page render
+        this.renderPage(this.pageNum)
+
+        // Update navigation buttons
+        this.updateNavigationButtons()
+      })
+      .catch((error) => {
+        console.error("Error loading PDF:", error)
+        if (loadingMessage) {
+          loadingMessage.style.display = "none"
+        }
+        alert("Error al cargar el PDF. Por favor, intenta nuevamente.")
+      })
+  }
+
+  renderPage(num) {
+    if (!this.canvas || !this.ctx || !this.pdfDoc) return
+
+    this.pageRendering = true
+
+    this.pdfDoc.getPage(num).then((page) => {
+      const viewport = page.getViewport({ scale: this.scale })
+      this.canvas.height = viewport.height
+      this.canvas.width = viewport.width
+
+      const renderContext = {
+        canvasContext: this.ctx,
+        viewport: viewport,
+      }
+
+      const renderTask = page.render(renderContext)
+
+      renderTask.promise.then(() => {
+        this.pageRendering = false
+        if (this.pageNumPending !== null) {
+          this.renderPage(this.pageNumPending)
+          this.pageNumPending = null
+        }
+      })
+    })
+
+    const pageInfo = document.getElementById("page-info")
+    if (pageInfo) {
+      pageInfo.textContent = `Página ${num} de ${this.pdfDoc.numPages}`
+    }
+    this.updateNavigationButtons()
+  }
+
+  queueRenderPage(num) {
+    if (this.pageRendering) {
+      this.pageNumPending = num
+    } else {
+      this.renderPage(num)
+    }
+  }
+
+  previousPage() {
+    if (this.pageNum <= 1) {
+      return
+    }
+    this.pageNum--
+    this.queueRenderPage(this.pageNum)
+  }
+
+  nextPage() {
+    if (!this.pdfDoc || this.pageNum >= this.pdfDoc.numPages) {
+      return
+    }
+    this.pageNum++
+    this.queueRenderPage(this.pageNum)
+  }
+
+  updateNavigationButtons() {
+    const prevBtn = document.getElementById("prev-btn")
+    const nextBtn = document.getElementById("next-btn")
+    if (prevBtn) prevBtn.disabled = this.pageNum <= 1
+    if (nextBtn && this.pdfDoc) nextBtn.disabled = this.pageNum >= this.pdfDoc.numPages
+  }
+
+  zoomIn() {
+    this.scale += 0.2
+    const zoomLevel = document.getElementById("zoom-level")
+    if (zoomLevel) {
+      zoomLevel.textContent = Math.round(this.scale * 100) + "%"
+    }
+    this.queueRenderPage(this.pageNum)
+  }
+
+  zoomOut() {
+    if (this.scale > 0.4) {
+      this.scale -= 0.2
+      const zoomLevel = document.getElementById("zoom-level")
+      if (zoomLevel) {
+        zoomLevel.textContent = Math.round(this.scale * 100) + "%"
+      }
+      this.queueRenderPage(this.pageNum)
+    }
+  }
+
+  closePDF() {
+    const modal = document.getElementById("pdf-modal")
+    if (modal) {
+      modal.style.display = "none"
+    }
+    if (this.pdfDoc) {
+      this.pdfDoc = null
+      this.pageNum = 1
+    }
   }
 }
+
+// Global instance
+let editionsLoader = null
 
 // Initialize editions loader when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
-  const loader = new EditionsLoader()
-  loader.loadEditions()
+  editionsLoader = new EditionsLoader()
+  editionsLoader.loadEditions()
 })
 
-// PDF.js configuration for editions page
-const pdfjsLib = window["pdfjs-dist/build/pdf"]
-pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
-
-// Global variables for PDF viewer
-let pdfDoc = null
-let pageNum = 1
-let pageRendering = false
-let pageNumPending = null
-let scale = 1.2
-let canvas = null
-let ctx = null
-
-// Function to open PDF from editions page
-function openPDFFromEditions(filename, title) {
-  document.getElementById("pdf-title").textContent = `Artefacto - ${title}`
-  document.getElementById("pdf-modal").style.display = "block"
-
-  // Initialize canvas if not already done
-  if (!canvas) {
-    canvas = document.getElementById("pdf-canvas")
-    ctx = canvas.getContext("2d")
-  }
-
-  loadPDFFromEditions(filename)
-}
-
-// Load PDF function for editions page
-function loadPDFFromEditions(url) {
-  const loadingMessage = document.getElementById("pdf-loading-message")
-  if (loadingMessage) {
-    loadingMessage.style.display = "block"
-  }
-
-  pdfjsLib
-    .getDocument(url)
-    .promise.then((pdfDoc_) => {
-      pdfDoc = pdfDoc_
-      pageNum = 1 // Reset to first page
-      document.getElementById("page-info").textContent = `Página ${pageNum} de ${pdfDoc.numPages}`
-
-      // Hide loading message
-      if (loadingMessage) {
-        loadingMessage.style.display = "none"
-      }
-
-      // Initial page render
-      renderPageFromEditions(pageNum)
-
-      // Update navigation buttons
-      updateNavigationButtonsFromEditions()
-    })
-    .catch((error) => {
-      console.error("Error loading PDF:", error)
-      if (loadingMessage) {
-        loadingMessage.style.display = "none"
-      }
-      alert("Error al cargar el PDF. Por favor, intenta nuevamente.")
-    })
-}
-
-function renderPageFromEditions(num) {
-  pageRendering = true
-
-  pdfDoc.getPage(num).then((page) => {
-    const viewport = page.getViewport({ scale: scale })
-    canvas.height = viewport.height
-    canvas.width = viewport.width
-
-    const renderContext = {
-      canvasContext: ctx,
-      viewport: viewport,
-    }
-
-    const renderTask = page.render(renderContext)
-
-    renderTask.promise.then(() => {
-      pageRendering = false
-      if (pageNumPending !== null) {
-        renderPageFromEditions(pageNumPending)
-        pageNumPending = null
-      }
-    })
-  })
-
-  document.getElementById("page-info").textContent = `Página ${num} de ${pdfDoc.numPages}`
-  updateNavigationButtonsFromEditions()
-}
-
-function queueRenderPageFromEditions(num) {
-  if (pageRendering) {
-    pageNumPending = num
-  } else {
-    renderPageFromEditions(num)
-  }
-}
-
+// Global functions for PDF controls
 function previousPage() {
-  if (pageNum <= 1) {
-    return
+  if (editionsLoader) {
+    editionsLoader.previousPage()
   }
-  pageNum--
-  queueRenderPageFromEditions(pageNum)
 }
 
 function nextPage() {
-  if (pageNum >= pdfDoc.numPages) {
-    return
+  if (editionsLoader) {
+    editionsLoader.nextPage()
   }
-  pageNum++
-  queueRenderPageFromEditions(pageNum)
-}
-
-function updateNavigationButtonsFromEditions() {
-  const prevBtn = document.getElementById("prev-btn")
-  const nextBtn = document.getElementById("next-btn")
-  if (prevBtn) prevBtn.disabled = pageNum <= 1
-  if (nextBtn) nextBtn.disabled = pageNum >= pdfDoc.numPages
 }
 
 function zoomIn() {
-  scale += 0.2
-  document.getElementById("zoom-level").textContent = Math.round(scale * 100) + "%"
-  queueRenderPageFromEditions(pageNum)
+  if (editionsLoader) {
+    editionsLoader.zoomIn()
+  }
 }
 
 function zoomOut() {
-  if (scale > 0.4) {
-    scale -= 0.2
-    document.getElementById("zoom-level").textContent = Math.round(scale * 100) + "%"
-    queueRenderPageFromEditions(pageNum)
+  if (editionsLoader) {
+    editionsLoader.zoomOut()
   }
 }
 
 function closePDFViewer() {
-  document.getElementById("pdf-modal").style.display = "none"
-  if (pdfDoc) {
-    pdfDoc = null
-    pageNum = 1
+  if (editionsLoader) {
+    editionsLoader.closePDF()
   }
 }
 
 // Close modal when clicking outside
-window.onclick = (event) => {
+window.addEventListener("click", (event) => {
   const modal = document.getElementById("pdf-modal")
-  if (event.target === modal) {
-    closePDFViewer()
+  if (event.target === modal && editionsLoader) {
+    editionsLoader.closePDF()
   }
-}
+})
 
 // Keyboard navigation for PDF
 document.addEventListener("keydown", (e) => {
   const modal = document.getElementById("pdf-modal")
-  if (modal && modal.style.display === "block") {
+  if (modal && modal.style.display === "block" && editionsLoader) {
     switch (e.key) {
       case "ArrowLeft":
-        previousPage()
+        editionsLoader.previousPage()
         break
       case "ArrowRight":
-        nextPage()
+        editionsLoader.nextPage()
         break
       case "Escape":
-        closePDFViewer()
+        editionsLoader.closePDF()
         break
       case "+":
-        zoomIn()
+        editionsLoader.zoomIn()
         break
       case "-":
-        zoomOut()
+        editionsLoader.zoomOut()
         break
     }
   }
