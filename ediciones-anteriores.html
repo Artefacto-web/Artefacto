@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ediciones Anteriores - Artefacto</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo%20Artefacto-bGMjkiSY77OePlPAPsdpIs1gGvukYi.png" alt="Logo Artefacto" class="logo">
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Inicio</a></li>
+                <li><a href="index.html#acerca" class="nav-link">Acerca de Artefacto</a></li>
+                <li><a href="index.html#editores" class="nav-link">Editores</a></li>
+                <li><a href="ediciones-anteriores.html" class="nav-link active">Ediciones Anteriores</a></li>
+                <li><a href="envio-casos.html" class="nav-link">Envío de Casos</a></li>
+                <li><a href="contacto.html" class="nav-link">Contáctanos</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="header-content">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo%20Artefacto-bGMjkiSY77OePlPAPsdpIs1gGvukYi.png" alt="Logo Artefacto" class="page-logo">
+                <h1>Ediciones Anteriores</h1>
+                <p>Explora nuestra colección completa de publicaciones</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Editions Library Section -->
+    <section class="section">
+        <div class="container">
+            <div class="editions-intro">
+                <h2>Biblioteca de Ediciones</h2>
+                <p>Accede a todas las ediciones publicadas de Artefacto. Cada número contiene casos clínicos, reportes especializados y contenido educativo valioso para la comunidad de residentes.</p>
+            </div>
+
+            <!-- Loading indicator -->
+            <div id="loading-editions" class="loading-container">
+                <div class="loading-spinner"></div>
+                <p>Cargando ediciones...</p>
+            </div>
+
+            <!-- Editions Grid -->
+            <div id="editions-grid" class="editions-grid" style="display: none;">
+                <!-- Will be populated by JavaScript -->
+            </div>
+
+            <!-- No editions message -->
+            <div id="no-editions" class="no-editions" style="display: none;">
+                <div class="no-editions-content">
+                    <h3>No hay ediciones disponibles</h3>
+                    <p>Aún no se han publicado ediciones. ¡Mantente atento para las próximas publicaciones!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PDF Viewer Modal -->
+    <div id="pdf-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="pdf-title">Artefacto - Edición</h3>
+                <span class="close" onclick="closePDFViewer()">&times;</span>
+            </div>
+            <div class="pdf-controls">
+                <button onclick="previousPage()" id="prev-btn">← Anterior</button>
+                <span id="page-info">Página 1 de 1</span>
+                <button onclick="nextPage()" id="next-btn">Siguiente →</button>
+                <div class="zoom-controls">
+                    <button onclick="zoomOut()">-</button>
+                    <span id="zoom-level">100%</span>
+                    <button onclick="zoomIn()">+</button>
+                </div>
+            </div>
+            <div class="pdf-container">
+                <canvas id="pdf-canvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo%20Artefacto-bGMjkiSY77OePlPAPsdpIs1gGvukYi.png" alt="Logo Artefacto" class="footer-logo">
+                    <p>Gaceta mensual de la Residencia de Diagnóstico por Imágenes - Diagnóstico Médico</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Navegación</h4>
+                    <a href="index.html">Inicio</a>
+                    <a href="index.html#acerca">Acerca de Artefacto</a>
+                    <a href="index.html#editores">Editores</a>
+                    <a href="envio-casos.html">Envío de Casos</a>
+                    <a href="contacto.html">Contáctanos</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p>dm.artefacto@gmail.com</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Artefacto. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="script.js"></script>
+    <script src="editions-loader.js"></script>
+</body>
+</html>

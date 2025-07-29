@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artefacto - Revista Médica</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo%20Artefacto-bGMjkiSY77OePlPAPsdpIs1gGvukYi.png" alt="Logo Artefacto" class="logo">
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Inicio</a></li>
+                <li><a href="#acerca" class="nav-link">Acerca de Artefacto</a></li>
+                <li><a href="#editores" class="nav-link">Editores</a></li>
+                <li><a href="ediciones-anteriores.html" class="nav-link">Ediciones Anteriores</a></li>
+                <li><a href="envio-casos.html" class="nav-link">Envío de Casos</a></li>
+                <li><a href="contacto.html" class="nav-link">Contáctanos</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero">
+        <div class="animated-bg"></div>
+        <div class="hero-bg-placeholder">
+            <!-- Placeholder for background image -->
+            <div class="hero-bg-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-logo">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo%20Artefacto-bGMjkiSY77OePlPAPsdpIs1gGvukYi.png" alt="Logo Artefacto" class="hero-logo-img">
+            </div>
+            <p class="hero-subtitle">"Un espacio hecho por y para residentes"</p>
+            <div class="current-edition">
+                <h2>Edición Actual</h2>
+                <div class="edition-info">
+                    <h3 id="current-title">Junio 2025 - Vol. 1, Nº 1</h3>
+                    <p>Gaceta mensual de la Residencia de Diagnóstico por Imágenes</p>
+                    <div class="edition-actions">
+                        <button class="btn-primary" onclick="openPDFViewer()">Ver Revista</button>
+                        <a href="#" id="download-link" class="btn-secondary" download>Descargar PDF</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PDF Viewer Modal -->
+    <div id="pdf-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="pdf-title">Artefacto - Edición Actual</h3>
+                <span class="close" onclick="closePDFViewer()">&times;</span>
+            </div>
+            <div class="pdf-controls">
+                <button onclick="previousPage()" id="prev-btn">← Anterior</button>
+                <span id="page-info">Página 1 de 1</span>
+                <button onclick="nextPage()" id="next-btn">Siguiente →</button>
+                <div class="zoom-controls">
+                    <button onclick="zoomOut()">-</button>
+                    <span id="zoom-level">100%</span>
+                    <button onclick="zoomIn()">+</button>
+                </div>
+            </div>
+            <div class="pdf-container">
+                <canvas id="pdf-canvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <section id="acerca" class="section">
+        <div class="container">
+            <h2>Acerca de Artefacto</h2>
+            <div class="about-content">
+                <p>Todo artefacto tiene una historia. Algunos aparecen por error, otros por azar, otros porque alguien los creó con un propósito. Esta revista es un poco de todo eso.</p>
+                
+                <p><strong>Artefacto</strong> nace como un espacio creado por residentes y para residentes de diagnóstico por imágenes. Representa una pausa dentro del vértigo del día a día, donde compartimos lo que aprendemos, lo que nos llama la atención, lo que nos hace pensar... o incluso lo que nos hace reír frente a una imagen inesperada.</p>
+                
+                <p>No busca ser una revista científica tradicional ni un anuario institucional. Es más bien un cuaderno de experiencias, donde quedan registrados los casos que nos hacen detenernos, los logros que queremos celebrar y las ideas que queremos preservar antes de que se pierdan en el ritmo de la residencia.</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <h3>Casos de la Semana</h3>
+                        <p>Casos clínicos relevantes con análisis detallado de imágenes diagnósticas</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Reportes de Caso</h3>
+                        <p>Experiencias clínicas que contribuyen al aprendizaje colectivo</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Artefacto Mental</h3>
+                        <p>Una sección para ver las imágenes médicas desde otro ángulo</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Actividades</h3>
+                        <p>Participación de residentes en congresos y eventos académicos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Editors Section -->
+    <section id="editores" class="section bg-light">
+        <div class="container">
+            <h2>Nuestro Equipo Editorial</h2>
+            <div class="editors-grid">
+                <div class="editor-card">
+                    <div class="editor-photo-container">
+                        <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/MarceloFoto.jpg-XmZGaGltMFfVWviQCEJBO7rSKtGYNn.jpeg" alt="Dr. Erick Marcelo Quispe Amador" class="editor-photo">
+                        <div class="editor-badge">Director Editorial</div>
+                    </div>
+                    <div class="editor-info">
+                        <h3>Dr. Erick Marcelo Quispe Amador</h3>
+                        <p class="editor-role">Director Editorial</p>
+                        <p class="editor-bio">Médico especialista en Diagnóstico por Imágenes. Lidera el equipo editorial de Artefacto con el objetivo de crear un espacio de aprendizaje y intercambio de experiencias entre residentes.</p>
+                    </div>
+                </div>
+                
+                <div class="editor-card">
+                    <div class="editor-photo-container">
+                        <div class="editor-photo-placeholder">
+                            <span>📷</span>
+                            <p>Foto próximamente</p>
+                        </div>
+                        <div class="editor-badge">Coordinador</div>
+                    </div>
+                    <div class="editor-info">
+                        <h3>Dr. Jean Carlo Sánchez</h3>
+                        <p class="editor-role">Coordinador Editorial</p>
+                        <p class="editor-bio">Residente especialista en formación, coordinador del equipo editorial y responsable de la organización del contenido mensual de la revista.</p>
+                    </div>
+                </div>
+                
+                <div class="editor-card">
+                    <div class="editor-photo-container">
+                        <div class="editor-photo-placeholder">
+                            <span>📷</span>
+                            <p>Foto próximamente</p>
+                        </div>
+                        <div class="editor-badge">Coordinadora</div>
+                    </div>
+                    <div class="editor-info">
+                        <h3>Dra. Ginet Fragozo</h3>
+                        <p class="editor-role">Coordinadora Editorial</p>
+                        <p class="editor-bio">Especialista en diagnóstico por imágenes, coordinadora editorial y responsable de la revisión de casos clínicos y contenido científico.</p>
+                    </div>
+                </div>
+                
+                <div class="editor-card">
+                    <div class="editor-photo-container">
+                        <div class="editor-photo-placeholder">
+                            <span>📷</span>
+                            <p>Foto próximamente</p>
+                        </div>
+                        <div class="editor-badge">Coordinadora</div>
+                    </div>
+                    <div class="editor-info">
+                        <h3>Dra. Mabel Añazgo</h3>
+                        <p class="editor-role">Coordinadora Editorial</p>
+                        <p class="editor-bio">Residente especialista, coordinadora editorial y creadora de la sección "Artefacto Mental", aportando creatividad y perspectiva única al contenido.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo%20Artefacto-bGMjkiSY77OePlPAPsdpIs1gGvukYi.png" alt="Logo Artefacto" class="footer-logo">
+                    <p>Gaceta mensual de la Residencia de Diagnóstico por Imágenes - Diagnóstico Médico</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p>dm.artefacto@gmail.com</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Ediciones</h4>
+                    <div id="editions-list">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Artefacto. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

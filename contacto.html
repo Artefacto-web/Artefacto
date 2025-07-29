@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contáctanos - Artefacto</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo%20Artefacto-bGMjkiSY77OePlPAPsdpIs1gGvukYi.png" alt="Logo Artefacto" class="logo">
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Inicio</a></li>
+                <li><a href="index.html#acerca" class="nav-link">Acerca de Artefacto</a></li>
+                <li><a href="index.html#editores" class="nav-link">Editores</a></li>
+                <li><a href="ediciones-anteriores.html" class="nav-link">Ediciones Anteriores</a></li>
+                <li><a href="envio-casos.html" class="nav-link">Envío de Casos</a></li>
+                <li><a href="contacto.html" class="nav-link active">Contáctanos</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="header-content">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo%20Artefacto-bGMjkiSY77OePlPAPsdpIs1gGvukYi.png" alt="Logo Artefacto" class="page-logo">
+                <h1>Contáctanos</h1>
+                <p>Estamos aquí para escucharte y colaborar contigo</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section">
+        <div class="container">
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="info-card">
+                        <h3>Envío de Casos y Colaboraciones</h3>
+                        <p>¿Tienes un caso interesante que compartir? ¿Una imagen que merece ser vista? Te invitamos a ser parte de Artefacto.</p>
+                        
+                        <div class="contact-details">
+                            <div class="contact-item">
+                                <div class="contact-icon">📧</div>
+                                <div class="contact-text">
+                                    <strong>Email Principal:</strong>
+                                    <a href="mailto:dm.artefacto@gmail.com">dm.artefacto@gmail.com</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="submission-guide">
+                        <h4>Recursos Útiles</h4>
+                        <p>Descarga nuestra guía completa con las instrucciones para el envío de casos clínicos:</p>
+                        <a href="guia-envio-casos.pdf" class="btn-secondary" download>
+                            📄 Descargar Guía de Envío
+                        </a>
+                        <div class="guide-note">
+                            <p>También puedes visitar nuestra <a href="envio-casos.html">página de envío de casos</a> para más detalles sobre el proceso.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form-section">
+                    <div class="form-card">
+                        <h3>Envíanos un Mensaje</h3>
+                        <p>Completa el formulario y nos pondremos en contacto contigo</p>
+                        
+                        <form id="contact-form">
+                            <div class="form-group">
+                                <label for="name">Nombre Completo</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="subject">Asunto</label>
+                                <select id="subject" name="subject" required>
+                                    <option value="">Selecciona un asunto</option>
+                                    <option value="caso">Envío de Caso Clínico</option>
+                                    <option value="colaboracion">Propuesta de Colaboración</option>
+                                    <option value="consulta">Consulta General</option>
+                                    <option value="sugerencia">Sugerencia</option>
+                                    <option value="feedback">Feedback sobre la revista</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message">Mensaje</label>
+                                <textarea id="message" name="message" rows="6" required placeholder="Cuéntanos en qué podemos ayudarte..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn-primary btn-large">Enviar Mensaje</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FAQ Section -->
+            <div class="faq-section">
+                <h3>Preguntas Frecuentes</h3>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <h4>¿Cómo puedo enviar un caso clínico?</h4>
+                        <p>Puedes enviar tu caso directamente a <strong>dm.artefacto@gmail.com</strong> siguiendo las instrucciones de nuestra guía de envío. También puedes usar el formulario de esta página.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>¿Qué formato deben tener las imágenes?</h4>
+                        <p>Las imágenes deben estar correctamente anonimizadas, en buena calidad, y enviadas como archivos separados (no insertas en el documento).</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>¿Cuánto tiempo toma la revisión?</h4>
+                        <p>Nuestro equipo editorial revisa los casos enviados y responde en un plazo de 1-2 semanas. Puede sugerir correcciones antes de la publicación.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>¿Puedo proponer colaboraciones?</h4>
+                        <p>¡Por supuesto! Estamos abiertos a colaboraciones, ideas para nuevas secciones, y propuestas que enriquezcan nuestra revista.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo%20Artefacto-bGMjkiSY77OePlPAPsdpIs1gGvukYi.png" alt="Logo Artefacto" class="footer-logo">
+                    <p>Gaceta mensual de la Residencia de Diagnóstico por Imágenes - Diagnóstico Médico</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Navegación</h4>
+                    <a href="index.html">Inicio</a>
+                    <a href="index.html#acerca">Acerca de Artefacto</a>
+                    <a href="index.html#editores">Editores</a>
+                    <a href="envio-casos.html">Envío de Casos</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p>dm.artefacto@gmail.com</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Artefacto. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
