@@ -215,7 +215,7 @@ body {
   height: 100%;
   background: var(--gradient);
   /* Placeholder for background image - replace with: */
-   background-image: url('fondoartefacto.jpg');
+   background-image: url('https://raw.githubusercontent.com/Artefacto-web/Artefacto/refs/heads/main/fondoartefacto.jpg');
   background-size: cover;
   background-position: center;
   z-index: -2;
