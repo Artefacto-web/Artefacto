@@ -22,7 +22,7 @@ class EditionsLoader {
           date: "2025-06",
           volume: 1,
           number: 1,
-          coverImage:"assets/portada1.jpg",
+          coverImage: "assets/portada1.jpg",
         },
         // Add more editions here as they become available
       ]

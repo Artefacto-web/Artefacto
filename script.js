@@ -1,3 +1,14 @@
+// Loading screen
+window.addEventListener("load", () => {
+  const loadingScreen = document.getElementById("loading-screen")
+  setTimeout(() => {
+    loadingScreen.classList.add("fade-out")
+    setTimeout(() => {
+      loadingScreen.style.display = "none"
+    }, 500)
+  }, 1500) // Show loading for 1.5 seconds minimum
+})
+
 // Import PDF.js library
 const pdfjsLib = window["pdfjs-dist/build/pdf"]
 
@@ -173,11 +184,21 @@ function closePDFViewer() {
 }
 
 function loadPDF(url) {
+  const loadingMessage = document.getElementById("pdf-loading-message")
+  if (loadingMessage) {
+    loadingMessage.style.display = "block"
+  }
+
   pdfjsLib
     .getDocument(url)
     .promise.then((pdfDoc_) => {
       pdfDoc = pdfDoc_
       document.getElementById("page-info").textContent = `Página ${pageNum} de ${pdfDoc.numPages}`
+
+      // Hide loading message
+      if (loadingMessage) {
+        loadingMessage.style.display = "none"
+      }
 
       // Initial page render
       renderPage(pageNum)
@@ -187,6 +208,9 @@ function loadPDF(url) {
     })
     .catch((error) => {
       console.error("Error loading PDF:", error)
+      if (loadingMessage) {
+        loadingMessage.style.display = "none"
+      }
       alert("Error al cargar el PDF. Por favor, intenta nuevamente.")
     })
 }
