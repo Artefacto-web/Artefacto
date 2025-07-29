@@ -108,15 +108,176 @@ document.addEventListener("DOMContentLoaded", () => {
   loader.loadEditions()
 })
 
+// PDF.js configuration for editions page
+const pdfjsLib = window["pdfjs-dist/build/pdf"]
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
+
+// Global variables for PDF viewer
+let pdfDoc = null
+let pageNum = 1
+let pageRendering = false
+let pageNumPending = null
+let scale = 1.2
+let canvas = null
+let ctx = null
+
 // Function to open PDF from editions page
 function openPDFFromEditions(filename, title) {
   document.getElementById("pdf-title").textContent = `Artefacto - ${title}`
   document.getElementById("pdf-modal").style.display = "block"
-  window.loadPDF(filename) // Assuming loadPDF is a global function
+
+  // Initialize canvas if not already done
+  if (!canvas) {
+    canvas = document.getElementById("pdf-canvas")
+    ctx = canvas.getContext("2d")
+  }
+
+  loadPDFFromEditions(filename)
 }
 
-// Declare the loadPDF function if it's not already defined
-function loadPDF(filename) {
-  // Implementation to load PDF goes here
-  console.log(`Loading PDF: ${filename}`)
+// Load PDF function for editions page
+function loadPDFFromEditions(url) {
+  const loadingMessage = document.getElementById("pdf-loading-message")
+  if (loadingMessage) {
+    loadingMessage.style.display = "block"
+  }
+
+  pdfjsLib
+    .getDocument(url)
+    .promise.then((pdfDoc_) => {
+      pdfDoc = pdfDoc_
+      pageNum = 1 // Reset to first page
+      document.getElementById("page-info").textContent = `Página ${pageNum} de ${pdfDoc.numPages}`
+
+      // Hide loading message
+      if (loadingMessage) {
+        loadingMessage.style.display = "none"
+      }
+
+      // Initial page render
+      renderPageFromEditions(pageNum)
+
+      // Update navigation buttons
+      updateNavigationButtonsFromEditions()
+    })
+    .catch((error) => {
+      console.error("Error loading PDF:", error)
+      if (loadingMessage) {
+        loadingMessage.style.display = "none"
+      }
+      alert("Error al cargar el PDF. Por favor, intenta nuevamente.")
+    })
 }
+
+function renderPageFromEditions(num) {
+  pageRendering = true
+
+  pdfDoc.getPage(num).then((page) => {
+    const viewport = page.getViewport({ scale: scale })
+    canvas.height = viewport.height
+    canvas.width = viewport.width
+
+    const renderContext = {
+      canvasContext: ctx,
+      viewport: viewport,
+    }
+
+    const renderTask = page.render(renderContext)
+
+    renderTask.promise.then(() => {
+      pageRendering = false
+      if (pageNumPending !== null) {
+        renderPageFromEditions(pageNumPending)
+        pageNumPending = null
+      }
+    })
+  })
+
+  document.getElementById("page-info").textContent = `Página ${num} de ${pdfDoc.numPages}`
+  updateNavigationButtonsFromEditions()
+}
+
+function queueRenderPageFromEditions(num) {
+  if (pageRendering) {
+    pageNumPending = num
+  } else {
+    renderPageFromEditions(num)
+  }
+}
+
+function previousPage() {
+  if (pageNum <= 1) {
+    return
+  }
+  pageNum--
+  queueRenderPageFromEditions(pageNum)
+}
+
+function nextPage() {
+  if (pageNum >= pdfDoc.numPages) {
+    return
+  }
+  pageNum++
+  queueRenderPageFromEditions(pageNum)
+}
+
+function updateNavigationButtonsFromEditions() {
+  const prevBtn = document.getElementById("prev-btn")
+  const nextBtn = document.getElementById("next-btn")
+  if (prevBtn) prevBtn.disabled = pageNum <= 1
+  if (nextBtn) nextBtn.disabled = pageNum >= pdfDoc.numPages
+}
+
+function zoomIn() {
+  scale += 0.2
+  document.getElementById("zoom-level").textContent = Math.round(scale * 100) + "%"
+  queueRenderPageFromEditions(pageNum)
+}
+
+function zoomOut() {
+  if (scale > 0.4) {
+    scale -= 0.2
+    document.getElementById("zoom-level").textContent = Math.round(scale * 100) + "%"
+    queueRenderPageFromEditions(pageNum)
+  }
+}
+
+function closePDFViewer() {
+  document.getElementById("pdf-modal").style.display = "none"
+  if (pdfDoc) {
+    pdfDoc = null
+    pageNum = 1
+  }
+}
+
+// Close modal when clicking outside
+window.onclick = (event) => {
+  const modal = document.getElementById("pdf-modal")
+  if (event.target === modal) {
+    closePDFViewer()
+  }
+}
+
+// Keyboard navigation for PDF
+document.addEventListener("keydown", (e) => {
+  const modal = document.getElementById("pdf-modal")
+  if (modal && modal.style.display === "block") {
+    switch (e.key) {
+      case "ArrowLeft":
+        previousPage()
+        break
+      case "ArrowRight":
+        nextPage()
+        break
+      case "Escape":
+        closePDFViewer()
+        break
+      case "+":
+        zoomIn()
+        break
+      case "-":
+        zoomOut()
+        break
+    }
+  }
+})
