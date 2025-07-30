@@ -143,6 +143,8 @@ function setupNavigation() {
 // Setup contact form
 function setupContactForm() {
   const form = document.getElementById("contact-form")
+  if (!form) return
+
   form.addEventListener("submit", (e) => {
     e.preventDefault()
 
@@ -152,9 +154,14 @@ function setupContactForm() {
     const subject = formData.get("subject")
     const message = formData.get("message")
 
-    // Create mailto link
-    const mailtoLink = `mailto:dm.artefacto@gmail.com?subject=${encodeURIComponent(`[Artefacto] ${subject} - ${name}`)}&body=${encodeURIComponent(`Nombre: ${name}\nEmail: ${email}\n\nMensaje:\n${message}`)}`
+    // Get subject text
+    const subjectSelect = document.getElementById("subject")
+    const subjectText = subjectSelect.options[subjectSelect.selectedIndex].text
 
+    // Create mailto link
+    const mailtoLink = `mailto:dm.artefacto@gmail.com?subject=${encodeURIComponent(`[Artefacto] ${subjectText} - ${name}`)}&body=${encodeURIComponent(`Nombre: ${name}\nEmail: ${email}\n\nMensaje:\n${message}`)}`
+
+    // Open mailto link
     window.location.href = mailtoLink
 
     // Show success message
