@@ -34,11 +34,20 @@ class EditionsLoader {
           title: "Junio 2025 - Vol. 1, Nº 1",
           filename: "magazines/2025-06-vol1-n1.pdf",
           description: "Primera edición de Artefacto",
-          date: "2025-06",
+          date: "2025-07",
           volume: 1,
           number: 1,
           coverImage: "assets/portada1.jpg",
         },
+                {
+          title: "Junio 2025 - Vol. 2, Nº 2",
+          filename: "magazines/2025-08-vol2-n2.pdf",
+          description: "Segunda edición de Artefacto",
+          date: "2025-08",
+          volume: 1,
+          number: 1,
+          coverImage: "assets/portada2.jpg",
+        }
         // Add more editions here as they become available
       ]
 
