@@ -21,7 +21,16 @@ const editions = [
     date: "2025-06",
     volume: 1,
     number: 1,
-  },
+  }
+  ,
+ {
+    title: "Julio 2025 - Vol. 1, Nº 2",  // Nueva edición
+    filename: "magazines/2025-07-vol1-n2.pdf",
+    description: "Segunda edición de Artefacto",
+    date: "2025-07",
+    volume: 1,
+    number: 2
+  }
   // Agregar más ediciones aquí siguiendo el mismo formato
   // {
   //   title: "Julio 2025 - Vol. 1, Nº 2",
