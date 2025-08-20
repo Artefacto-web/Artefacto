@@ -25,7 +25,7 @@ const editions = [
   ,
  {
     title: "Julio 2025 - Vol. 1, Nº 2",  // Nueva edición
-    filename: "magazines/2025-07-vol1-n2.pdf",
+    filename: "magazines/2025-07-vol2n2.pdf",
     description: "Segunda edición de Artefacto",
     date: "2025-07",
     volume: 2,
