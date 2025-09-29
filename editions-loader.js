@@ -47,6 +47,15 @@ class EditionsLoader {
           volume: 1,
           number: 2,
           coverImage: "assets/portada2.jpg",
+        },
+                {
+          title: "Junio 2025 - Vol. 1, Nº 3",
+          filename: "magazines/2025-08-vol3-n3.pdf",
+          description: "Tercera edición de Artefacto",
+          date: "2025-09",
+          volume: 1,
+          number: 3,
+          coverImage: "assets/portada3.jpg",
         }
         // Add more editions here as they become available
       ]
