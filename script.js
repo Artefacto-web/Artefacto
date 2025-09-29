@@ -28,7 +28,7 @@ const editions = [
     filename: "magazines/2025-07-vol2n2.pdf",
     description: "Segunda edición de Artefacto",
     date: "2025-07",
-    volume: 2,
+    volume: 1,
     number: 2
   }
   ,
@@ -37,7 +37,7 @@ const editions = [
     filename: "magazines/2025-07-vol3n3.pdf",
     description: "Tercera edición de Artefacto",
     date: "2025-08",
-    volume: 2,
+    volume: 1,
     number: 3
   }
 
