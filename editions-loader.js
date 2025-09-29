@@ -41,7 +41,7 @@ class EditionsLoader {
         },
                 {
           title: "Junio 2025 - Vol. 1, Nº 2",
-          filename: "magazines/2025-08-vol2-n2.pdf",
+          filename: "magazines/2025-07-vol1-n2.pdf",
           description: "Segunda edición de Artefacto",
           date: "2025-08",
           volume: 1,
@@ -50,7 +50,7 @@ class EditionsLoader {
         },
                 {
           title: "Junio 2025 - Vol. 1, Nº 3",
-          filename: "magazines/2025-08-vol3-n3.pdf",
+          filename: "magazines/2025-08-vol1-n3.pdf",
           description: "Tercera edición de Artefacto",
           date: "2025-09",
           volume: 1,
