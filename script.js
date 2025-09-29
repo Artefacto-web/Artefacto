@@ -32,6 +32,14 @@ const editions = [
     number: 2
   }
   ,
+   {
+    title: "Agosto 2025 - Vol. 1, Nº 3",  // Nueva edición
+    filename: "magazines/2025-07-vol3n3.pdf",
+    description: "Tercera edición de Artefacto",
+    date: "2025-08",
+    volume: 2,
+    number: 3
+  }
 
   // Agregar más ediciones aquí siguiendo el mismo formato
   // {
